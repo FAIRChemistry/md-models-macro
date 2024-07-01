@@ -1,0 +1,23 @@
+[package]
+name = "mdmodels-macro"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+syn = "1.0"
+quote = "1.0"
+proc-macro2 = "1.0"
+serde = { version = "1.0.203", features = ["derive"] }
+mdmodels = { path = "../mdmodels" }
+lazy_static = "1.4.0"
+convert_case = "0.6.0"
+schemars = "0.8.21"
+
+[dev-dependencies]
+derive_builder = "0.20.0"
+serde_json = "1.0.119"
+trybuild = "1.0.96"
