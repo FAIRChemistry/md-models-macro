@@ -833,9 +833,9 @@ checksum = "a7a70ba024b9dc04c27ea2f0c0548feb474ec5c54bba33a7f72f873a39d07b24"
 
 [[package]]
 name = "mdmodels"
-version = "0.1.0"
+version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3d36c3db8bc218606d36136216260870649de351dea9a7dc5370f453620a0aa5"
+checksum = "a765fbb737a73d2c44687211b0a4d17b33a83c035e164fd86ae1ede030451e15"
 dependencies = [
  "clap",
  "colored",
