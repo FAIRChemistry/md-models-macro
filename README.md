@@ -7,7 +7,7 @@ This macro can be used to convert a markdown model using [MD-Models]() into Rust
 ## Installation
 
 ```bash
-cargo install md-models-macro
+cargo install mdmodels-macro
 ```
 
 ## Example
