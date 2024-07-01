@@ -47,7 +47,7 @@ pub fn parse_mdmodel(input: TokenStream) -> TokenStream {
 
     // Parse the DataModel from the specified path
     let model = DataModel::from_markdown(&path)
-        .expect(format!("Failed to parse the markdown model at path: {:?}", path).as_str());
+        .unwrap_or_else(|_| panic!("Failed to parse the markdown model at path: {:?}", path));
     let model_name = syn::Ident::new(
         &to_snake(model.name.unwrap_or("model".to_string())),
         proc_macro2::Span::call_site(),

@@ -10,7 +10,7 @@ mod tests {
         test::ObjectBuilder::default()
             .string_value("Hello, World!")
             .integer_value(42)
-            .float_value(3.14)
+            .float_value(3.2)
             .boolean_value(true)
             .multiple_values(vec![1.12, 1.0])
             .nested_object(
@@ -40,7 +40,7 @@ mod tests {
         test::Object {
             string_value: Some("Hello, World!".to_string()),
             integer_value: Some(42),
-            float_value: Some(3.14),
+            float_value: Some(3.2),
             boolean_value: Some(true),
             multiple_values: Some(vec![1.12, 1.0]),
             nested_object: Some(test::Nested {
@@ -86,7 +86,7 @@ mod tests {
         let object: test::Object = serde_json::from_str(json).expect("Failed to parse JSON");
         assert_eq!(object.string_value, Some("Hello, World!".to_string()));
         assert_eq!(object.integer_value, Some(42));
-        assert_eq!(object.float_value, Some(3.14));
+        assert_eq!(object.float_value, Some(3.2));
         assert_eq!(object.boolean_value, Some(true));
         assert_eq!(object.multiple_values, Some(vec![1.12, 1.0]));
         assert_eq!(
