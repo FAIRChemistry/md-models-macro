@@ -1,5 +1,6 @@
 [package]
 name = "mdmodels-macro"
+description = "A procedural macro for generating models from a markdown data model"
 version = "0.1.0"
 edition = "2021"
 license = "MIT"
