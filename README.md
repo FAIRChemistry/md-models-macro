@@ -1,5 +1,7 @@
 # MD-Models Macro
 
+![Build Status](https://github.com/JR-1991/mdmodels-macro/actions/workflows/test.yml/badge.svg)
+
 This macro can be used to convert a markdown model using [MD-Models]() into Rust structs and enums. The resulting Rust code can be used to serialize and deserialize the model and integrate it into your Rust project.
 
 ## Installation
