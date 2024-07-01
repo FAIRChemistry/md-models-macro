@@ -65,7 +65,7 @@ mod tests {
             {
                 "string_value": "Hello, World!",
                 "integer_value": 42,
-                "float_value": 3.14,
+                "float_value": 3.2,
                 "boolean_value": true,
                 "multiple_values": [1.12, 1.0],
                 "nested_object": {
