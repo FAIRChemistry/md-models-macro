@@ -61,13 +61,11 @@ pub fn parse_mdmodel(input: TokenStream) -> TokenStream {
         }
 
         let struct_name = syn::Ident::new(&object.name, proc_macro2::Span::call_site());
-        let mut fields = vec![
-            quote! {
-                #[serde(skip_serializing_if = "Option::is_none")]
-                #[builder(default)]
-                pub additional_properties: Option<std::collections::HashMap<String, serde_json::Value>>
-            },
-        ];
+        let mut fields = vec![quote! {
+            #[serde(skip_serializing_if = "Option::is_none")]
+            #[builder(default)]
+            pub additional_properties: Option<std::collections::HashMap<String, serde_json::Value>>
+        }];
         let mut getters = vec![];
         let mut setters = vec![];
 
