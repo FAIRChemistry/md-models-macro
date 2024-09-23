@@ -61,7 +61,11 @@ pub fn parse_mdmodel(input: TokenStream) -> TokenStream {
         }
 
         let struct_name = syn::Ident::new(&object.name, proc_macro2::Span::call_site());
-        let mut fields = vec![];
+        let mut fields = vec![quote! {
+            #[serde(skip_serializing_if = "Option::is_none")]
+            #[builder(default)]
+            pub additional_properties: Option<std::collections::HashMap<String, serde_json::Value>>
+        }];
         let mut getters = vec![];
         let mut setters = vec![];
 
@@ -107,14 +111,19 @@ pub fn parse_mdmodel(input: TokenStream) -> TokenStream {
 
         // Generate the struct definition with pyclass and constructor
         let struct_def = quote! {
-            #[derive(Builder, Debug, Clone, Default, serde::Serialize, serde::Deserialize, schemars::JsonSchema)]
+            #[derive(Builder, Debug, Clone, PartialEq, Default, serde::Serialize, serde::Deserialize, schemars::JsonSchema)]
             pub struct #struct_name {
                 #(#fields),*
             }
 
             impl #struct_name {
+                pub fn new() -> Self {
+                    Self::default()
+                }
+
                 #(#getters)*
                 #(#setters)*
+
             }
         };
 
@@ -261,7 +270,6 @@ fn get_serde_attr(is_array: bool, required: bool) -> proc_macro2::TokenStream {
 fn generate_enum(mappings: &BTreeMap<String, String>, name: &str) -> proc_macro2::TokenStream {
     let enum_name = syn::Ident::new(name, proc_macro2::Span::call_site());
     let mut variants = vec![];
-    let mut values = vec![];
     let mut index = 0;
 
     for (key, value) in mappings {
@@ -271,33 +279,22 @@ fn generate_enum(mappings: &BTreeMap<String, String>, name: &str) -> proc_macro2
         if index == 0 {
             variants.push(quote! {
                 #[default]
+                #[serde(rename = #variant_value)]
                 #variant_name
             });
             index += 1;
         } else {
             variants.push(quote! {
+                #[serde(rename = #variant_value)]
                 #variant_name
             });
         }
-
-        values.push(quote! {
-            #enum_name::#variant_name => #variant_value.to_string()
-        });
     }
 
     quote! {
         #[derive(Debug, Clone, Default, PartialEq, serde::Serialize, serde::Deserialize, schemars::JsonSchema)]
         pub enum #enum_name {
             #(#variants),*
-        }
-
-        impl std::fmt::Display for #enum_name {
-            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                let s = match self {
-                    #(#values),*,
-                };
-                write!(f, "{}", s)
-            }
         }
     }
 }

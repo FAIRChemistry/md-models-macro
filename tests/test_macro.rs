@@ -38,19 +38,23 @@ mod tests {
     fn test_model_non_builder() {
         // Build the 'Object' struct
         test::Object {
+            additional_properties: None,
             string_value: Some("Hello, World!".to_string()),
             integer_value: Some(42),
             float_value: Some(3.2),
             boolean_value: Some(true),
             multiple_values: Some(vec![1.12, 1.0]),
             nested_object: Some(test::Nested {
+                additional_properties: None,
                 value: Some("nested".to_string()),
             }),
             multiple_nested_objects: vec![
                 test::Nested {
+                    additional_properties: None,
                     value: Some("nested1".to_string()),
                 },
                 test::Nested {
+                    additional_properties: None,
                     value: Some("nested2".to_string()),
                 },
             ],
@@ -79,7 +83,7 @@ mod tests {
                         "value": "nested2"
                     }
                 ],
-                "enum_value": "Value"
+                "enum_value": "value"
             }
         "#;
 
