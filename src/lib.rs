@@ -18,10 +18,13 @@ const FORBIDDEN_NAMES: [&str; 9] = [
 lazy_static! {
     static ref TYPE_MAPPINGS: HashMap<&'static str, &'static str> = {
         let mut m = HashMap::new();
-        m.insert("integer", "i32");
-        m.insert("float", "f32");
+        m.insert("integer", "i64");
+        m.insert("float", "f64");
         m.insert("string", "String");
         m.insert("boolean", "bool");
+        m.insert("bytes", "Vec<u8>");
+        m.insert("date", "String");
+        m.insert("datetime", "String");
         m
     };
 }
@@ -48,10 +51,6 @@ pub fn parse_mdmodel(input: TokenStream) -> TokenStream {
     // Parse the DataModel from the specified path
     let model = DataModel::from_markdown(&path)
         .unwrap_or_else(|_| panic!("Failed to parse the markdown model at path: {:?}", path));
-    let model_name = syn::Ident::new(
-        &to_snake(model.name.unwrap_or("model".to_string())),
-        proc_macro2::Span::call_site(),
-    );
     let mut structs = vec![];
 
     // Iterate through the objects in the model
@@ -74,6 +73,7 @@ pub fn parse_mdmodel(input: TokenStream) -> TokenStream {
             let field_name = syn::Ident::new(&attribute.name, proc_macro2::Span::call_site());
             let field_type = get_data_type(&attribute.dtypes[0])
                 .unwrap_or_else(|_| panic!("Unknown data type: {}", attribute.dtypes[0]));
+
             let wrapped_type = wrap_dtype(attribute.is_array, attribute.required, field_type);
             let builder_attr =
                 get_builder_attr(attribute.is_array, attribute.required, &attribute.name);
@@ -141,13 +141,12 @@ pub fn parse_mdmodel(input: TokenStream) -> TokenStream {
 
     // Combine all generated structs into a single TokenStream
     let expanded = quote! {
-        pub mod #model_name {
-            use derive_builder::Builder;
-            use std::error::Error;
+        use derive_builder::Builder;
+        use serde;
+        use schemars;
 
-            #(#structs)*
-            #(#enums)*
-        }
+        #(#structs)*
+        #(#enums)*
     };
 
     TokenStream::from(expanded)
@@ -302,11 +301,6 @@ fn generate_enum(mappings: &BTreeMap<String, String>, name: &str) -> proc_macro2
 /// Checks if an object or enum name is a reserved keyword
 fn is_reserved(name: &str) -> bool {
     FORBIDDEN_NAMES.contains(&name)
-}
-
-/// Function to convert a string to snake case
-fn to_snake(name: String) -> String {
-    name.to_case(Case::Snake)
 }
 
 /// Function to convert a string to upper camel case
