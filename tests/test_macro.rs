@@ -7,29 +7,18 @@ mod tests {
     #[test]
     fn test_model_builder() {
         // Build the 'Object' struct
-        test::ObjectBuilder::default()
+        ObjectBuilder::default()
             .string_value("Hello, World!")
             .integer_value(42)
             .float_value(3.2)
             .boolean_value(true)
             .multiple_values(vec![1.12, 1.0])
-            .nested_object(
-                test::NestedBuilder::default()
-                    .value("nested")
-                    .build()
-                    .unwrap(),
-            )
+            .nested_object(NestedBuilder::default().value("nested").build().unwrap())
             .multiple_nested_objects(vec![
-                test::NestedBuilder::default()
-                    .value("nested1")
-                    .build()
-                    .unwrap(),
-                test::NestedBuilder::default()
-                    .value("nested2")
-                    .build()
-                    .unwrap(),
+                NestedBuilder::default().value("nested1").build().unwrap(),
+                NestedBuilder::default().value("nested2").build().unwrap(),
             ])
-            .enum_value(test::SomeEnum::Value)
+            .enum_value(SomeEnum::Value)
             .build()
             .expect("Failed to build object");
     }
@@ -37,28 +26,28 @@ mod tests {
     #[test]
     fn test_model_non_builder() {
         // Build the 'Object' struct
-        test::Object {
+        Object {
             additional_properties: None,
             string_value: Some("Hello, World!".to_string()),
             integer_value: Some(42),
             float_value: Some(3.2),
             boolean_value: Some(true),
             multiple_values: Some(vec![1.12, 1.0]),
-            nested_object: Some(test::Nested {
+            nested_object: Some(Nested {
                 additional_properties: None,
                 value: Some("nested".to_string()),
             }),
             multiple_nested_objects: vec![
-                test::Nested {
+                Nested {
                     additional_properties: None,
                     value: Some("nested1".to_string()),
                 },
-                test::Nested {
+                Nested {
                     additional_properties: None,
                     value: Some("nested2".to_string()),
                 },
             ],
-            enum_value: Some(test::SomeEnum::Value),
+            enum_value: Some(SomeEnum::Value),
         };
     }
 
@@ -87,7 +76,7 @@ mod tests {
             }
         "#;
 
-        let object: test::Object = serde_json::from_str(json).expect("Failed to parse JSON");
+        let object: Object = serde_json::from_str(json).expect("Failed to parse JSON");
         assert_eq!(object.string_value, Some("Hello, World!".to_string()));
         assert_eq!(object.integer_value, Some(42));
         assert_eq!(object.float_value, Some(3.2));
@@ -106,6 +95,6 @@ mod tests {
             object.multiple_nested_objects[1].value,
             Some("nested2".to_string())
         );
-        assert_eq!(object.enum_value.unwrap(), test::SomeEnum::Value);
+        assert_eq!(object.enum_value.unwrap(), SomeEnum::Value);
     }
 }
