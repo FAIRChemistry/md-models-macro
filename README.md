@@ -37,7 +37,13 @@ You can convert this markdown file into Rust code using the following command:
 ```rust
 use mdmodels_macro::parse_mdmodel;
 
+// if you want to use the macro in the current module
 parse_mdmodel!("tests/data/model.md");
+
+// or if you want to use the macro in a module (e.g. in lib.rs)
+mod my_module {
+  parse_mdmodel!("tests/data/model.md");
+}
 ```
 
 At this point, the macro will generate the corresponding structs and enums in Rust code, which will be available as a module. The module name is derived from the title (`# Test`) as snake case, if present. Otherwise the module name will be `model`.
@@ -48,7 +54,7 @@ You can then use the module in your code:
 
 ```rust
 fn main () {
-    let obj = test::Object {
+    let obj = Object {
         string_value: "Hello, World!".to_string(),
         enum_value: model::SomeEnum::VALUE,
     };
@@ -59,7 +65,7 @@ fn main () {
     println!("Serialized: \n{}\n", serialized);
 
     // Deserialize the object
-    let deserialized: test::Object = serde_json::from_str(&serialized).unwrap();
+    let deserialized: Object = serde_json::from_str(&serialized).unwrap();
 
     println!("Deserialized: \n{:#?}\n", deserialized);
 }
@@ -71,7 +77,7 @@ This macro also supports the builder pattern. To use the builder pattern, you ne
 
 ```rust
 fn main () -> Result<(), Box<dyn std::error::Error>> {
-    let obj = test::ObjectBuilder::new()
+    let obj = ObjectBuilder::new()
         .string_value("Hello, World!")
         .enum_value(model::SomeEnum::VALUE)
         .build()?;
@@ -82,7 +88,7 @@ fn main () -> Result<(), Box<dyn std::error::Error>> {
     println!("Serialized: \n{}\n", serialized);
 
     // Deserialize the object
-    let deserialized: test::Object = serde_json::from_str(&serialized).unwrap();
+    let deserialized: Object = serde_json::from_str(&serialized).unwrap();
 
     println!("Deserialized: \n{:#?}\n", deserialized);
 
